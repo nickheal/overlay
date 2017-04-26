@@ -11,6 +11,12 @@
     border-radius: .5em;
     box-sizing: border-box;
     padding: .5em;
+    opacity: .25;
+    transition: opacity 300ms ease-in-out;
+
+    &:hover {
+        opacity: 1;
+    }
 
     input {
         width: 100%;
@@ -20,7 +26,20 @@
 .nho-drop-zone {
     width: 100%;
     height: 0;
-    background: rgba(#aaa, .5);
+    background: repeating-linear-gradient(-45deg, rgba(#aaa, .25), rgba(#aaa, .25) .2em, transparent .4em, transparent .4em);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
     padding-bottom: (9 / 16) * 100 + %;
     border: dashed 1px #333;
+}
+
+.nho-overlay-image {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 999999999;
+    transform: translateX(-50%);
+    opacity: .5;
+    pointer-events: none;
 }

@@ -1,4 +1,10 @@
-@import 'pageCss/base';
+.nho-global-container {
+    display: none;
+
+    &.is-nho-active {
+        display: block;
+    }
+}
 
 .nho-container {
     position: fixed;

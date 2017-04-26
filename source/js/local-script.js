@@ -1,18 +1,35 @@
 import $ from './libs/jquery.js';
 
+function scriptPresent() {
+    return new Promise(resolve => {
+        chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+            for (let tab of tabs) {
+                chrome.tabs.sendMessage(tab.id, {instruction: 'identify'}, response => {
+                    if (response) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                });
+            }
+        });
+    });
+};
+
 $(document).ready(() => {
-    $('#js-activate-button').on('click', e => {
-        const active = localStorage.getItem('overlay-active');
-        //if (active === 'false') {
+    scriptPresent().then(val => {
+        if (val === false) {
             chrome.tabs.executeScript(null, {file: './pageScript.js'});
             chrome.tabs.insertCSS(null, {file: './pageCss.css'});
-            $(e.currentTarget).remove();
-            localStorage.setItem('overlay-active', true);
             window.close();
-        //}
-    })
-})
-
-chrome.webNavigation.onCompleted.addListener((tabId, changeInfo, tab) => {
-    localStorage.setItem('overlay-active', false);
+        } else {
+            chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+                for (let tab of tabs) {
+                    chrome.tabs.sendMessage(tab.id, {instruction: 'toggle'}, response => {
+                        window.close();
+                    });
+                }
+            });
+        }
+    });
 });

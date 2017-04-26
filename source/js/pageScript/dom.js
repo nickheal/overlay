@@ -4,11 +4,21 @@ export default class Dom {
     constructor() {
         this.draw();
         this.attachEvents();
+
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            if (request.instruction === 'identify') {
+                sendResponse({reply: 'here!'});
+            } else if (request.instruction === 'toggle') {
+                if (this.$domElement) {
+                    this.$domElement.toggleClass('is-nho-active');
+                }
+            }
+        });
     }
 
     draw() {
         this.$domElement = $(`
-            <div>
+            <div class="nho-global-container is-nho-active">
                 <div class="nho-container">
                     <div class="js-nho-drop-zone nho-drop-zone"></div>
                     <input class="js-nho-opacity-slider" type="range">
